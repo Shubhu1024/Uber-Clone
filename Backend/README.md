@@ -44,3 +44,42 @@ Send a JSON object with the following structure:
   }
 }
 ```
+
+## User Login
+
+**POST** `/users/login`
+
+Authenticates a user and returns a JWT token.
+
+### Request Body
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+### Status Codes
+
+- **200 OK**: Login successful.
+- **400 Bad Request**: Invalid input data.
+- **401 Unauthorized**: Invalid email or password.
+
+### Example Success Response
+
+```json
+{
+  "token": "<jwt_token>",
+  "user": {
+    "_id": "<user_id>",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
