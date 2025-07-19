@@ -83,3 +83,56 @@ Send a JSON object with the following structure:
   }
 }
 ```
+
+## Get User Profile
+
+**GET** `/users/profile`
+
+Returns the authenticated user's profile information.
+
+### Headers
+
+- `Authorization: Bearer <jwt_token>` (or cookie with `token`)
+
+### Status Codes
+
+- **200 OK**: Returns user profile.
+- **401 Unauthorized**: Invalid or missing token.
+
+### Example Success Response
+
+```json
+{
+  "_id": "<user_id>",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com"
+}
+```
+
+---
+
+## User Logout
+
+**GET** `/users/logout`
+
+Logs out the authenticated user by blacklisting the current token.
+
+### Headers
+
+- `Authorization: Bearer <jwt_token>` (or cookie with `token`)
+
+### Status Codes
+
+- **200 OK**: Logout successful.
+- **401 Unauthorized**: Invalid or missing token.
+
+### Example Success Response
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
