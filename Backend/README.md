@@ -201,3 +201,193 @@ Send a JSON object with the following structure:
   }
 }
 ```
+
+## Captain Routes
+
+### Register Captain
+
+**POST** `/captains/register`
+
+Registers a new captain (driver) in the system.
+
+#### Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",         // required, string, min 3 chars
+    "lastname": "Smith"          // optional, string, min 3 chars if provided
+  },
+  "email": "jane.smith@email.com", // required, valid email
+  "password": "password123",       // required, string, min 6 chars
+  "vehicle": {
+    "color": "Red",                // required, string, min 3 chars
+    "plate": "ABC123",             // required, string, min 3 chars
+    "capacity": 4,                 // required, integer, min 1
+    "vehicleType": "car"           // required, one of: "car", "motorcycle", "auto"
+  }
+}
+```
+
+#### Example Success Response
+
+```json
+{
+  "token": "<jwt_token>",
+  "captain": {
+    "_id": "<captain_id>",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@email.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request**: Invalid input data or captain already exists.
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "First name must be at least 3 characters long",
+        "param": "fullname.firstname",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+  or
+  ```json
+  {
+    "message": "Captain already exist"
+  }
+  ```
+
+---
+
+### Captain Login
+
+**POST** `/captains/login`
+
+Authenticates a captain and returns a JWT token.
+
+#### Request Body
+
+```json
+{
+  "email": "jane.smith@email.com", // required, valid email
+  "password": "password123"        // required, string, min 6 chars
+}
+```
+
+#### Example Success Response
+
+```json
+{
+  "token": "<jwt_token>",
+  "captain": {
+    "_id": "<captain_id>",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@email.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request**: Invalid input data.
+- **401 Unauthorized**: Invalid email or password.
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+---
+
+### Get Captain Profile
+
+**GET** `/captains/profile`
+
+Returns the authenticated captain's profile information.
+
+#### Headers
+
+- `Authorization: Bearer <jwt_token>` (or cookie with `token`)
+
+#### Example Success Response
+
+```json
+{
+  "captain": {
+    "_id": "<captain_id>",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@email.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+- **401 Unauthorized**: Invalid or missing token.
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+---
+
+### Captain Logout
+
+**GET** `/captains/logout`
+
+Logs out the authenticated captain by blacklisting the current token.
+
+#### Headers
+
+- `Authorization: Bearer <jwt_token>` (or cookie with `token`)
+
+#### Example Success Response
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Responses
+
+- **401 Unauthorized**: Invalid or missing token.
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
